@@ -862,11 +862,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7957942351869948125, guid: 8f2c1ffdafd49a943ac79dc0ff480220,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 244670058}
+      addedObject: {fileID: 524982238}
     - targetCorrespondingSourceObject: {fileID: 7957942351869948125, guid: 8f2c1ffdafd49a943ac79dc0ff480220,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 524982238}
+      addedObject: {fileID: 524982243}
+    - targetCorrespondingSourceObject: {fileID: 7957942351869948125, guid: 8f2c1ffdafd49a943ac79dc0ff480220,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 524982244}
   m_SourcePrefab: {fileID: 100100000, guid: 8f2c1ffdafd49a943ac79dc0ff480220, type: 3}
 --- !u!1 &244670057 stripped
 GameObject:
@@ -874,23 +878,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 244670056}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &244670058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 244670057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <trackablesChanged>k__BackingField:
-    m_PersistentCalls:
-      m_Calls: []
-  m_AnchorPrefab: {fileID: 7568360986088693418, guid: cc7ced85c210d4c2eb70bc117e21b21f,
-    type: 3}
 --- !u!114 &244670059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -922,8 +909,7 @@ MonoBehaviour:
   <trackablesChanged>k__BackingField:
     m_PersistentCalls:
       m_Calls: []
-  m_PlanePrefab: {fileID: 1568414836858200, guid: f0e0be81472ff1243aa2afa27e5d0e61,
-    type: 3}
+  m_PlanePrefab: {fileID: 0}
   m_DetectionMode: -1
 --- !u!114 &244670061
 MonoBehaviour:
@@ -1265,7 +1251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e011a698b7cf15d468bb7fcddcbca503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorManager: {fileID: 244670058}
+  m_AnchorManager: {fileID: 524982244}
   m_RaycastHitEvent: {fileID: 11400000, guid: 6ddaf6abbb6e3f6489a5badc62d646ef, type: 2}
 --- !u!114 &524982239
 MonoBehaviour:
@@ -1286,6 +1272,40 @@ MonoBehaviour:
   m_ARRaycastHitEvent: {fileID: 11400000, guid: 6ddaf6abbb6e3f6489a5badc62d646ef,
     type: 2}
   m_TrackableType: 17
+--- !u!114 &524982243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 244670057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d7cb2f670f53974ebc0a1becfecd54d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PrefabToPlace: {fileID: 916868578147282539, guid: bf38f17c38037554c83b1d7384043f34,
+    type: 3}
+  m_AnchorButton: {fileID: 1705945980}
+  arCamera: {fileID: 144782614}
+  m_AnchorManager: {fileID: 524982244}
+--- !u!114 &524982244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 244670057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <trackablesChanged>k__BackingField:
+    m_PersistentCalls:
+      m_Calls: []
+  m_AnchorPrefab: {fileID: 1934569588295450, guid: 9436d61a34146f94bbd35755c8c93b75,
+    type: 3}
 --- !u!1001 &612037588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1698,7 +1718,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1355376761}
-  - component: {fileID: 1355376760}
   m_Layer: 0
   m_Name: ScreenArrows
   m_TagString: Untagged
@@ -1706,23 +1725,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1355376760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1355376759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d7cb2f670f53974ebc0a1becfecd54d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PrefabToPlace: {fileID: 1237402283603786, guid: 2e80f2e009b5347149ebaae6d96ddfb8,
-    type: 3}
-  m_RaycastHitEvent: {fileID: 11400000, guid: 6ddaf6abbb6e3f6489a5badc62d646ef, type: 2}
-  m_AnchorButton: {fileID: 1705945980}
-  arCamera: {fileID: 144782614}
 --- !u!4 &1355376761
 Transform:
   m_ObjectHideFlags: 0
@@ -1733,8 +1735,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2289,7 +2291,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1355376760}
+      - m_Target: {fileID: 524982243}
         m_TargetAssemblyTypeName: UnityEngine.XR.ARFoundation.Samples.ARPlaceObjectAuto,
           Unity.XR.ARFoundation.Samples
         m_MethodName: PlaceObject
@@ -2299,9 +2301,9 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: PlaceObject
+          m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 1
+        m_CallState: 2
 --- !u!114 &1705945981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2349,7 +2351,7 @@ RectTransform:
   m_GameObject: {fileID: 1705945979}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.3, y: 2.3, z: 2.3}
+  m_LocalScale: {x: 4.5, y: 4.5, z: 4.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2108336588}
@@ -2357,7 +2359,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -200}
+  m_AnchoredPosition: {x: 0, y: -800}
   m_SizeDelta: {x: 160.82, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1779732405
@@ -2407,7 +2409,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorManager
       value: 
-      objectReference: {fileID: 244670058}
+      objectReference: {fileID: 0}
     - target: {fileID: 5167732747772772219, guid: 877dec1cd11674c21be49452b3a38ccd,
         type: 3}
       propertyPath: m_AnchorMax.y
