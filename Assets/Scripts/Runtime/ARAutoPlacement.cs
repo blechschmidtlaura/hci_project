@@ -123,25 +123,28 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 }
                 // Convert the anchor's world position to screen space
                 Vector3 anchorScreenPosition = arCamera.WorldToScreenPoint(referenceAnchor.transform.position);
+                Debug.Log("Anchor screen position" + anchorScreenPosition.ToString());
 
                 // Determine whether the anchor is on the left or right of the screen center
                 bool isAnchorOnLeft = anchorScreenPosition.x < Screen.width / 2;
+                bool isAnchorBehind = anchorScreenPosition.z < 0.0;
+
                 // Place the arrow accordingly
                 Vector3 arrowScreenPosition;
                 Quaternion arrowRotation = m_SpawnedObject.transform.rotation;
-                if (isAnchorOnLeft)
+                if ((isAnchorOnLeft && !isAnchorBehind) || (!isAnchorOnLeft && isAnchorBehind))
                 {
                     // Left side of the screen
                     arrowScreenPosition = new Vector3(100, Screen.height / 2, 1);
                     Debug.Log("Anchor is on the left side. Arrow placed on the left.");
-                    arrowRotation = Quaternion.Euler(180, 0, 0);
+                    //arrowRotation = Quaternion.Euler(180, 0, 0);
                 }
                 else
                 {
                     // Right side of the screen
                     arrowScreenPosition = new Vector3(Screen.width - 100, Screen.height / 2, 1);
                     Debug.Log("Anchor is on the right side. Arrow placed on the right.");
-                    arrowRotation = Quaternion.Euler(0, 0, 0);
+                    //arrowRotation = Quaternion.Euler(0, 0, 0);
                 }
 
                 // Convert the chosen screen position to world space
