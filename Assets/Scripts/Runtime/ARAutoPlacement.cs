@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace UnityEngine.XR.ARFoundation.Samples
 {
@@ -29,7 +30,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
         {
             if (m_PrefabToPlace == null || m_AnchorButton == null)
             {
-                Debug.LogWarning($"{nameof(ARPlaceObjectAuto)} component on {name} has null inputs and will have no effect in this scene.", this);
+                    Debug.LogWarning($"{nameof(ARPlaceObjectAuto)} component on {name} has null inputs and will have no effect in this scene.", this);
                 return;
             }
             // Subscribe to the Button click event
@@ -42,29 +43,38 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 m_AnchorButton.onClick.RemoveListener(PlaceObject);
         }
 
+        // Note: if we try to place more than one anchor it will automatically delete the new one
         void Update()
         {
-            if (m_AnchorManager.trackables.count == 0)
+            int anchor_count = m_AnchorManager.trackables.count;
+            if (anchor_count == 0)
+                Debug.Log("No bike position to find");
+            else if (anchor_count > 1)
             {
-                Debug.Log("no bike position to find");
+                Debug.LogWarning("[WARN] More than one anchor placed, destroying new one:");
+                int destroyed = 0;
+                foreach (var anchor in m_AnchorManager.trackables)
+                {
+                    if (destroyed < anchor_count-1)
+                    {
+                        // Destroy(anchor.gameObject); // stops remove button from working
+                        m_AnchorManager.TryRemoveAnchor(anchor);
+                        destroyed++;
+                    }
+                    Debug.Log("  Number of anchors: " + m_AnchorManager.trackables.count);
+                }
             }
             else
             {
+                // Find the last anchor placed
                 ARAnchor nearestAnchor = null;
-                // Find the first anchor (or closest anchor, if desired logic is implemented)
                 foreach (var anchor in m_AnchorManager.trackables)
-                {
                     nearestAnchor = anchor;
-                    break; // Just pick the first anchor for now
-                }
+
                 if (!IsAnchorVisible(nearestAnchor))
-                {
                     PlaceObject();
-                }
                 else if (IsAnchorVisible(nearestAnchor))
-                {
                     m_SpawnedObject.gameObject.SetActive(false); //deletes arrow
-                }
             }
         }
 
@@ -74,16 +84,12 @@ namespace UnityEngine.XR.ARFoundation.Samples
         /// <returns>True if the anchor is visible, false otherwise.</returns>
         private bool IsAnchorVisible(ARAnchor nearestAnchor)
         {
-
- 
             // Convert the anchor position to screen space
             Vector3 screenPosition = arCamera.WorldToScreenPoint(nearestAnchor.transform.position);
 
             // Check if the anchor is in front of the camera
             if (screenPosition.z < 0)
-            {
                 return false; // Anchor is behind the camera
-            }
 
             // Check if the anchor is within screen bounds
             if (screenPosition.x >= 0 && screenPosition.x <= Screen.width &&
@@ -91,39 +97,33 @@ namespace UnityEngine.XR.ARFoundation.Samples
             {
                 return true; // Anchor is visible on screen
             }
-
             return false; // Anchor is outside the screen bounds
         }
+
+
         public void PlaceObject()
         {
             if (m_AnchorManager.trackables.count == 0)
-            {
                 Debug.Log("No anchor position to find.");
-            }
             else
             {
-                // Retrieve the first anchor as the reference anchor
+                // Retrieve the last anchor to allow updates for arrow orientation 
                 ARAnchor referenceAnchor = null;
                 foreach (var anchor in m_AnchorManager.trackables)
-                {
                     referenceAnchor = anchor;
-                    break; // Use the first anchor for simplicity
-                }
 
                 if (referenceAnchor == null)
                 {
                     Debug.LogWarning("No valid anchor found.");
                     return;
                 }
-                // Instantiate or move the arrow prefab
+                // Instantiate or move the arrow prefab, create the object if it doesn't already exist
                 if (m_SpawnedObject == null)
-                {
-                    // Create the object if it doesn't already exist
                     m_SpawnedObject = Instantiate(m_PrefabToPlace);
-                }
+
                 // Convert the anchor's world position to screen space
                 Vector3 anchorScreenPosition = arCamera.WorldToScreenPoint(referenceAnchor.transform.position);
-                Debug.Log("Anchor screen position" + anchorScreenPosition.ToString());
+                //Debug.Log("Anchor screen position" + anchorScreenPosition.ToString());
 
                 // Determine whether the anchor is on the left or right of the screen center
                 bool isAnchorOnLeft = anchorScreenPosition.x < Screen.width / 2;
@@ -131,20 +131,29 @@ namespace UnityEngine.XR.ARFoundation.Samples
 
                 // Place the arrow accordingly
                 Vector3 arrowScreenPosition;
-                Quaternion arrowRotation = m_SpawnedObject.transform.rotation;
+                Quaternion arrowRotation;
+
+                // Quaternion arrowRotation = referenceAnchor.transform.rotation;
+                //Debug.Log("Anchor screen position" + anchorScreenPosition.ToString());
+
+                Vector3 anchorWorldPosition = referenceAnchor.transform.position;
+                Vector3 camWorldPosition = arCamera.transform.position;
+                Vector3 direction = anchorWorldPosition - camWorldPosition;
+
+                Debug.Log("Direction to bike: " + direction.ToString());
+
+                float angleInRad = Mathf.Atan2(direction.z, -direction.x); // XZ plane
+                float angleInDeg = angleInRad * Mathf.Rad2Deg;        // Convert to degrees
+                arrowRotation = Quaternion.Euler(0, angleInDeg - 90, 0);
+
+                // Place the anchor on the left (if true) or right side of the screen
                 if ((isAnchorOnLeft && !isAnchorBehind) || (!isAnchorOnLeft && isAnchorBehind))
-                {
-                    // Left side of the screen
+                { 
                     arrowScreenPosition = new Vector3(100, Screen.height / 2, 1);
-                    Debug.Log("Anchor is on the left side. Arrow placed on the left.");
-                    //arrowRotation = Quaternion.Euler(180, 0, 0);
                 }
                 else
                 {
-                    // Right side of the screen
                     arrowScreenPosition = new Vector3(Screen.width - 100, Screen.height / 2, 1);
-                    Debug.Log("Anchor is on the right side. Arrow placed on the right.");
-                    //arrowRotation = Quaternion.Euler(0, 0, 0);
                 }
 
                 // Convert the chosen screen position to world space
@@ -157,32 +166,5 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 Debug.Log($"Object placed at screen position: {arrowScreenPosition} (World position: {arrowWorldPosition}).");
             }
         }
-        /*
-        public void PlaceObject()
-        {
-            if (m_AnchorManager.trackables.count  == 0)
-            {
-                Debug.Log("no bike position to find");
-            }
-            else
-            {
-                if (m_SpawnedObject == null)
-                {
-                    // Create the object if it doesn't already exist
-                    m_SpawnedObject = Instantiate(m_PrefabToPlace);
-                }
-
-                // Calculate the screen position for the left side of the screen (middle vertically)
-                Vector3 screenPosition = new Vector3(0, Screen.height / 2, arCamera.nearClipPlane); // Left side of the screen
-
-                // Convert screen position to world position
-                Vector3 worldPosition = arCamera.ScreenToWorldPoint(new Vector3(0, Screen.height / 2, 1)); // Adjust depth as needed
-
-                // Set the object position to the calculated world position
-                m_SpawnedObject.transform.position = worldPosition;
-
-                Debug.Log("Object placed on the left side of the screen.");
-            }
-        }*/
     }
 }

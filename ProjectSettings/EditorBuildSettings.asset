@@ -5,16 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Menu/MenuLoader.unity
     guid: 6688ff74f56714cfeb7c919bcdbfe269
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Menu/Menu.unity
     guid: 904110ab8cef14f7d96c56ca20774e5a
   - enabled: 0
     path: Assets/Scenes/MetaMenu.unity
     guid: f4c0e17cbc9b3465dbcc74faf0ef6059
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Menu/HoloLensMenu.unity
     guid: a5fd9af6d753348da8ef1ab744ad4110
   - enabled: 0
