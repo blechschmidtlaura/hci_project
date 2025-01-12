@@ -17,6 +17,10 @@ namespace UnityEngine.XR.ARFoundation.Samples
         [Tooltip("The UI button that triggers the placement of the object.")]
         Button m_AnchorButton;
 
+        [Tooltip("The Slider element used to display the on/off state of this element.")]
+        [SerializeField]
+        Slider m_Slider;
+
         [SerializeField]
         Camera arCamera; // The camera used to view the scene
 
