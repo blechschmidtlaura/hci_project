@@ -121,40 +121,68 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 if (m_SpawnedObject == null)
                     m_SpawnedObject = Instantiate(m_PrefabToPlace);
 
-                // Convert the anchor's world position to screen space
-                Vector3 anchorScreenPosition = arCamera.WorldToScreenPoint(referenceAnchor.transform.position);
-                //Debug.Log("Anchor screen position" + anchorScreenPosition.ToString());
-
-                // Determine whether the anchor is on the left or right of the screen center
-                bool isAnchorOnLeft = anchorScreenPosition.x < Screen.width / 2;
-                bool isAnchorBehind = anchorScreenPosition.z < 0.0;
-
-                // Place the arrow accordingly
-                Vector3 arrowScreenPosition;
-                Quaternion arrowRotation;
-
-                // Quaternion arrowRotation = referenceAnchor.transform.rotation;
-                //Debug.Log("Anchor screen position" + anchorScreenPosition.ToString());
-
+                // Compute the arrow orientation in the anchor direction
                 Vector3 anchorWorldPosition = referenceAnchor.transform.position;
                 Vector3 camWorldPosition = arCamera.transform.position;
                 Vector3 direction = anchorWorldPosition - camWorldPosition;
-
                 Debug.Log("Direction to bike: " + direction.ToString());
 
                 float angleInRad = Mathf.Atan2(direction.z, -direction.x); // XZ plane
                 float angleInDeg = angleInRad * Mathf.Rad2Deg;        // Convert to degrees
-                arrowRotation = Quaternion.Euler(0, angleInDeg - 90, 0);
+                Quaternion arrowRotation = Quaternion.Euler(0, angleInDeg - 90, 0);
+                // Quaternion arrowRotation = referenceAnchor.transform.rotation;
 
-                // Place the anchor on the left (if true) or right side of the screen
-                if ((isAnchorOnLeft && !isAnchorBehind) || (!isAnchorOnLeft && isAnchorBehind))
-                { 
-                    arrowScreenPosition = new Vector3(100, Screen.height / 2, 1);
-                }
-                else
-                {
-                    arrowScreenPosition = new Vector3(Screen.width - 100, Screen.height / 2, 1);
-                }
+                Vector3 anchorScreenPosition = arCamera.WorldToScreenPoint(referenceAnchor.transform.position);
+                float scrMarginX = 150.0f;
+                float scrMarginY = 180.0f;
+
+                // Compute the ratio of [distance to the edge] and [offscreen position] for x and y from the scr CENTRE!
+                float scrCentreY = Screen.height / 2;
+                float distToEdgeY = scrCentreY - scrMarginY;
+                float distToAnchY = anchorScreenPosition.y - scrCentreY;
+                float offScreenRatioY = Mathf.Abs(distToEdgeY / distToAnchY); 
+
+                float scrCentreX = Screen.width / 2;
+                float distToEdgeX = scrCentreX - scrMarginX;
+                float distToAnchX = anchorScreenPosition.x - scrCentreX; 
+                float offScreenRatioX = Mathf.Abs(distToEdgeX / distToAnchX); 
+
+                // Invert the axes that are offscreen when anchor is behind camera
+                bool isAnchorBehind = anchorScreenPosition.z < 0.0;
+                bool isXoffscreen = ((anchorScreenPosition.x < scrMarginX) || (anchorScreenPosition.x > (Screen.width - scrMarginX)));
+                bool isYoffscreen = ((anchorScreenPosition.y < scrMarginY) || (anchorScreenPosition.y > (Screen.height - scrMarginY)));
+                int invX = (isAnchorBehind && isXoffscreen) ? -1 : 1;
+                int invY = (isAnchorBehind && isYoffscreen) ? -1 : 1;   
+
+                // Compute the arrow position on the screen edge 
+                float arrowScreenX = (anchorScreenPosition.x*invX - scrCentreX) * offScreenRatioY;
+                arrowScreenX += scrCentreX;
+                arrowScreenX = Mathf.Min(Screen.width - scrMarginX, Mathf.Max(scrMarginX, arrowScreenX));
+
+                float arrowScreenY = (anchorScreenPosition.y*invY - scrCentreY) * offScreenRatioX;
+                arrowScreenY += scrCentreY;
+                arrowScreenY = Mathf.Min(Screen.height - scrMarginY, Mathf.Max(scrMarginY, arrowScreenY));
+
+                float invert = (anchorScreenPosition.z < 0.0f) ? -1 : 1;
+                Vector3 arrowScreenPosition = new Vector3(arrowScreenX, arrowScreenY, 1);
+
+                Debug.Log($"Anchor is at screen position: {anchorScreenPosition}.\n " +
+                          $"Arrow placed at screen position: {arrowScreenPosition}.");
+
+                // // Determine whether the anchor is on the left or right of the screen center
+                // bool isAnchorOnLeft = anchorScreenPosition.x < Screen.width / 2;
+                // bool isAnchorBehind = anchorScreenPosition.z < 0.0;
+                // 
+                // // Place the anchor on the left (if true) or right side of the screen
+                // if ((isAnchorOnLeft && !isAnchorBehind) || (!isAnchorOnLeft && isAnchorBehind))
+                // { 
+                //     arrowScreenPosition = new Vector3(100, Screen.height / 2, 1);
+                // }
+                // else
+                // {
+                //     arrowScreenPosition = new Vector3(Screen.width - 100, Screen.height / 2, 1);
+                // }
+
 
                 // Convert the chosen screen position to world space
                 Vector3 arrowWorldPosition = arCamera.ScreenToWorldPoint(arrowScreenPosition);
